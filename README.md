@@ -1,2 +1,2 @@
-# FominClinicTelegramBot
-Telegram Bot for Fomin Clinic Web
+# frontend-interview-telegram-bot
+Frontend Interview Telegram Bot
