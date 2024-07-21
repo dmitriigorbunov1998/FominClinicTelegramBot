@@ -22,7 +22,19 @@ bot.command('start', async (ctx) => {
 })
 
 bot.hears(['HTML', 'CSS', 'JavaScript', 'React'], async (ctx) => {
-    await ctx.reply(`Что такое ${ctx.message.text}?`)
+    const inlineKeyBoard = new InlineKeyboard()
+        .text('Получить ответ', 'getAnswer')
+        .text('Отменить', 'cancel')
+    await ctx.reply(`Что такое ${ctx.message.text}?`, {
+        reply_markup: inlineKeyBoard
+    })
+})
+
+bot.on('callback_query:data', async (ctx) => {
+    if (ctx.callbackQuery.data === 'cancel') {
+        await ctx.reply('Отменено')
+        await ctx.answerCallbackQuery('Отменено')
+    }
 })
 
 bot.catch((err) => {
