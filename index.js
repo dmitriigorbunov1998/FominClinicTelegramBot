@@ -17,25 +17,33 @@ bot.command('start', async (ctx) => {
         'Начнём!'
     );
     await ctx.reply('Выберите тему для рассмотрения...', {
-        reply_markup: startKeyboard
-    })
-})
+        reply_markup: startKeyboard,
+    });
+});
 
 bot.hears(['HTML', 'CSS', 'JavaScript', 'React'], async (ctx) => {
     const inlineKeyBoard = new InlineKeyboard()
-        .text('Получить ответ', 'getAnswer')
-        .text('Отменить', 'cancel')
+        .text('Получить ответ', JSON.stringify({
+            type: ctx.message.text,
+            questionId: 1,
+            }))
+        .text('Отменить', 'cancel');
     await ctx.reply(`Что такое ${ctx.message.text}?`, {
-        reply_markup: inlineKeyBoard
-    })
-})
+        reply_markup: inlineKeyBoard,
+    });
+});
 
 bot.on('callback_query:data', async (ctx) => {
     if (ctx.callbackQuery.data === 'cancel') {
-        await ctx.reply('Отменено')
-        await ctx.answerCallbackQuery('Отменено')
+        await ctx.reply('Отменено');
+        await ctx.answerCallbackQuery();
+        return;
     }
-})
+
+    const callbackData = JSON.parse(ctx.callbackQuery.data);
+    await ctx.reply(`${callbackData.type} - составляющая фронтенда`);
+    await ctx.answerCallbackQuery();
+});
 
 bot.catch((err) => {
     const ctx = err.ctx;
